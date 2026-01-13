@@ -27,13 +27,14 @@ export default function Home() {
   useEffect(() => {
     /* ================= SCROLL-IN ANIMATIONS ================= */
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-          }
-        });
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        }
+      }), 
+
       },
       { threshold: 0.18 }
     );
