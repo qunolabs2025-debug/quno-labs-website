@@ -27,18 +27,19 @@ export default async function handler(
     });
 
     await transporter.sendMail({
-        from: `"QUNO LABS Website" <${process.env.SMTP_USER}>`,
-        to: process.env.CONTACT_RECEIVER,
-        replyTo: "qunolabs2025@gmail.com", // ✅ add this line
-        subject: `New Contact Message from ${name}`,
-        html: `
-            <h2>New Contact Message</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Message:</strong></p>
-            <p>${message}</p>
-        `,
+      from: `"QUNO LABS Website" <${process.env.SMTP_USER}>`,
+      to: process.env.CONTACT_RECEIVER_EMAIL,
+      replyTo: email,
+      subject: `New Contact Message from ${name}`,
+      html: `
+        <h2>New Contact Message</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `,
     });
+
 
     return res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
