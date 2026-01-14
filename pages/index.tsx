@@ -631,13 +631,33 @@ export default function Home() {
             <div style={{ marginTop: 48 }}>
               <button
                 disabled={formStatus === "sending" || !formData.name || !isEmailValid}
-                onClick={() => {
+                onClick={async () => {
+                  if (!formData.name || !isEmailValid || !formData.message) return;
+
                   setFormStatus("sending");
-                  setTimeout(() => {
+
+                  try {
+                    const res = await fetch("/api/contact", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(formData),
+                    });
+
+                    if (!res.ok) {
+                      throw new Error("Request failed");
+                    }
+
                     setFormStatus("success");
                     setFormData({ name: "", email: "", message: "" });
-                  }, 1200);
+                  } catch (err) {
+                    console.error(err);
+                    alert("Failed to send message. Please try again.");
+                    setFormStatus("idle");
+                  }
                 }}
+
                 style={{
                   padding: "18px 56px",
                   borderRadius: 999,
