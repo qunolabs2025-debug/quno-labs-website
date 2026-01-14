@@ -9,17 +9,20 @@ export default function Home() {
   const isEmailValid = /\S+@\S+\.\S+/.test(formData.email);
 
   /* ================= SCROLL REFS ================= */
-  const homeRef = useRef(null);
-  const projectsRef = useRef(null);
-  const servicesRef = useRef(null);
-  const whyRef = useRef(null);
-  const ctaRef = useRef(null);
+  const homeRef = useRef<HTMLDivElement | null>(null);
+  const projectsRef = useRef<HTMLDivElement | null>(null);
+  const servicesRef = useRef<HTMLDivElement | null>(null);
+  const whyRef = useRef<HTMLDivElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
 
   /* ================= ANIMATION REFS ================= */
-  const animatedSections = useRef([]);
-  const animatedCards = useRef([]);
-  const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {    ref?.current?.scrollIntoView({ behavior: "smooth" });
+  /* ================= ANIMATION REFS ================= */
+  const animatedSections = useRef<(HTMLDivElement | null)[]>([]);
+  const animatedCards = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
+  ref.current?.scrollIntoView({ behavior: "smooth" });
   };
+
 
   /* ================= SCROLL-IN ANIMATIONS ================= */
   useEffect(() => {
@@ -28,10 +31,11 @@ export default function Home() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
+            const el = entry.target as HTMLElement;
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
           }
-        });
+        }); 
       },
       { threshold: 0.18 }
     );
@@ -46,25 +50,43 @@ export default function Home() {
   useEffect(() => {
     document.title = "QUNO LABS – AI, Data Science & Web Solutions for Startups";
 
-    const metaDesc = document.querySelector('meta[name="description"]') || document.createElement("meta");
+    const metaDesc =
+  (document.querySelector('meta[name="description"]') as HTMLMetaElement) ||
+  document.createElement("meta");
+
     metaDesc.name = "description";
-    metaDesc.content = "QUNO LABS is a next-generation technology studio delivering AI solutions, data science & analytics, and scalable web development for startups and growing businesses.";
+    metaDesc.content =
+  "QUNO LABS is a next-generation technology studio delivering AI solutions, data science & analytics, and scalable web development for startups and growing businesses.";
+
     document.head.appendChild(metaDesc);
 
-    const ogTitle = document.querySelector('meta[property="og:title"]') || document.createElement("meta");
+
+    const ogTitle =
+  (document.querySelector('meta[property="og:title"]') as HTMLMetaElement) ||
+  document.createElement("meta");
+
     ogTitle.setAttribute("property", "og:title");
     ogTitle.content = "QUNO LABS – Building the Future with Intelligent Technology";
     document.head.appendChild(ogTitle);
 
-    const ogDesc = document.querySelector('meta[property="og:description"]') || document.createElement("meta");
+
+    const ogDesc =
+  (document.querySelector('meta[property="og:description"]') as HTMLMetaElement) ||
+  document.createElement("meta");
+
     ogDesc.setAttribute("property", "og:description");
-    ogDesc.content = "We build intelligent AI systems, data-driven platforms, and scalable web solutions for startups and ambitious teams.";
+    ogDesc.content =
+  "We build intelligent AI systems, data-driven platforms, and scalable web solutions for startups and ambitious teams.";
     document.head.appendChild(ogDesc);
 
-    const ogType = document.querySelector('meta[property="og:type"]') || document.createElement("meta");
+    const ogType =
+  (document.querySelector('meta[property="og:type"]') as HTMLMetaElement) ||
+    document.createElement("meta");
+
     ogType.setAttribute("property", "og:type");
     ogType.content = "website";
     document.head.appendChild(ogType);
+
   }, []);
 
   const sectionFade = {
@@ -80,15 +102,16 @@ export default function Home() {
   });
 
   /* ================= MICRO MOTION HELPERS ================= */
-  const cardHoverEnter = (e) => {
-    e.currentTarget.style.transform = "translateY(-10px) scale(1.025)";
-    e.currentTarget.style.backgroundPosition = "100% 100%";
+  const cardHoverEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+  e.currentTarget.style.transform = "translateY(-10px) scale(1.025)";
+  e.currentTarget.style.backgroundPosition = "100% 100%";
   };
 
-  const cardHoverLeave = (e) => {
+  const cardHoverLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.style.transform = "translateY(0) scale(1)";
     e.currentTarget.style.backgroundPosition = "0% 0%";
   };
+
 
   return (
     <div
@@ -170,9 +193,11 @@ export default function Home() {
         {/* ================= HERO ================= */}
         <section
           ref={(el) => {
-            homeRef.current = el;
-            animatedSections.current[0] = el;
+            const div = el as HTMLDivElement | null;
+            homeRef.current = div;
+            animatedSections.current[0] = div;
           }}
+
           style={sectionFade}
         >
           <h1 style={{ fontSize: 52, fontWeight: 800 }}>
@@ -195,9 +220,11 @@ export default function Home() {
         {/* ================= PROJECT PREVIEWS ================= */}
         <section
           ref={(el) => {
-            projectsRef.current = el;
-            animatedSections.current[1] = el;
+            const div = el as HTMLDivElement | null;
+            projectsRef.current = div;
+            animatedSections.current[1] = div;
           }}
+
           style={{ ...sectionFade, marginTop: 160 }}
         >
           <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>Project Previews</h2>
@@ -227,7 +254,9 @@ export default function Home() {
             }].map((p, i) => (
               <div
                 key={i}
-                ref={(el) => (animatedCards.current[i] = el)}
+                ref={(el) => {
+                  animatedCards.current[i] = el as HTMLDivElement | null;
+                }}
                 style={{
                   ...cardFade(i * 120),
                   padding: 36,
@@ -269,9 +298,11 @@ export default function Home() {
         {/* ================= SERVICES ================= */}
         <section
           ref={(el) => {
-            servicesRef.current = el;
-            animatedSections.current[2] = el;
+            const div = el as HTMLDivElement | null;
+            servicesRef.current = div;
+            animatedSections.current[2] = div;
           }}
+
           style={{ ...sectionFade, marginTop: 120 }}
         >
           <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>Our Services</h2>
@@ -288,7 +319,10 @@ export default function Home() {
           >
             {/* AI SOLUTIONS */}
             <div
-              ref={(el) => (animatedCards.current[10] = el)}
+              ref={(el) => {
+                animatedCards.current[10] = el as HTMLDivElement | null;
+              }}
+
               style={{
                 ...cardFade(0),
                 padding: 42,
@@ -315,7 +349,10 @@ export default function Home() {
 
             {/* DATA SCIENCE */}
             <div
-              ref={(el) => (animatedCards.current[11] = el)}
+              ref={(el) => {
+                animatedCards.current[11] = el as HTMLDivElement | null;
+              }}
+
               style={{
                 ...cardFade(140),
                 padding: 42,
@@ -342,7 +379,10 @@ export default function Home() {
 
             {/* WEB DEVELOPMENT */}
             <div
-              ref={(el) => (animatedCards.current[12] = el)}
+              ref={(el) => {
+                animatedCards.current[12] = el as HTMLDivElement | null;
+              }}
+
               style={{
                 ...cardFade(280),
                 padding: 42,
@@ -427,9 +467,11 @@ export default function Home() {
         {/* ================= WHY QUNO LABS ================= */}
         <section
           ref={(el) => {
-            whyRef.current = el;
-            animatedSections.current[3] = el;
+            const div = el as HTMLDivElement | null;
+            whyRef.current = div;
+            animatedSections.current[3] = div;
           }}
+
           style={{ ...sectionFade, marginTop: 80 }}
         >
           <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>Why QUNO LABS</h2>
@@ -456,7 +498,9 @@ export default function Home() {
             }].map((w, i) => (
               <div
                 key={i}
-                ref={(el) => (animatedCards.current[20 + i] = el)}
+                ref={(el) => {
+                  animatedCards.current[20 + i] = el as HTMLDivElement | null;
+                }}
                 style={{
                   ...cardFade(i * 150),
                   padding: 38,
@@ -480,9 +524,11 @@ export default function Home() {
         {/* ================= CTA + CONTACT ================= */}
         <section
           ref={(el) => {
-            ctaRef.current = el;
-            animatedSections.current[4] = el;
+            const div = el as HTMLDivElement | null;
+            ctaRef.current = div;
+            animatedSections.current[4] = div;
           }}
+
           style={{ ...sectionFade, marginTop: 200 }}
         >
           <div
